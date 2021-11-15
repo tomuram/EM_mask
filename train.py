@@ -8,7 +8,6 @@ from absl import flags
 from absl import logging
 
 import os
-import h5py
 import horovod.tensorflow as hvd
 import tensorflow as tf
 tf.compat.v1.disable_eager_execution()
@@ -114,6 +113,7 @@ def main(unused_argv):
     save_checkpoints_secs=save_checkpoints_secs,
     session_config=sess_config,
     keep_checkpoint_max=10,
+    log_step_count_steps=100 if hvd.rank()==0 else 1e8,
   )
   mask_estimator = tf.estimator.Estimator(
     model_fn=model_fn,
